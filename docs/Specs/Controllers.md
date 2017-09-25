@@ -28,8 +28,9 @@ database.
 
 ### Read
 
-When you need to read data from the database, you'll have a `read` method.  
-What will you want to ensure works for this?
+When you need to read data from the database, you'll have a `read` method, such
+as `index` for multiple records or `show` for individual records.  What will
+you want to ensure works for this?
 
 * What happens when requested information...
   * is found?
