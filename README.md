@@ -113,6 +113,10 @@ rails s
 to fire up a development server.  If you want to see how a UI interacts with
 the API, you'll need to point traffic from it to `localhost:3000/`.
 
+Check out the docs on
+[Environment Variables](docs/General/Environment_Variables.md) to get those
+configured locally.
+
 ### Detailed Documentation
 
 If you're curious about how to do anything or the reasons behind choices made
