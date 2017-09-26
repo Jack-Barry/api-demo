@@ -5,3 +5,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Example.destroy_all
+
+20.times do |example|
+  Example.create!(
+    name:    Faker::TwinPeaks.character,
+    content: Faker::TwinPeaks.quote
+  )
+end
