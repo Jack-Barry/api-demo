@@ -45,7 +45,7 @@ RSpec.describe 'Examples API', type: :request do
   end
 
   describe "POST /examples" do
-    let(:valid_attrs) { { name: "Valid Name", content: "Valid Content" } }
+    let(:valid_attrs) { { example: { name: "Valid Name", content: "Valid Content" } } }
 
     context "when the request is valid" do
       before { post "/examples", params: valid_attrs }
@@ -61,7 +61,7 @@ RSpec.describe 'Examples API', type: :request do
     end
 
     context "when the request is invalid" do
-      before { post "/examples", params: { name: "Invalid Example" } }
+      before { post "/examples", params: { example: { name: "Invalid Example" } } }
 
       it "returns a validation failure message" do
         expect(response.body).to include("Content can't be blank")
@@ -74,7 +74,7 @@ RSpec.describe 'Examples API', type: :request do
   end
 
   describe "PUT /examples/:id" do
-    let(:valid_attrs) { { name: "New Name" } }
+    let(:valid_attrs) { { example: { name: "New Name" } } }
 
     context "when the record exists" do
       context "when the request is valid" do
@@ -90,7 +90,7 @@ RSpec.describe 'Examples API', type: :request do
       end
 
       context "when the request is invalid" do
-        let(:invalid_attrs) { { name: nil } }
+        let(:invalid_attrs) { { example: { name: nil } } }
         before { put "/examples/#{example_id}", params: invalid_attrs }
 
         it "returns a validation failure message" do

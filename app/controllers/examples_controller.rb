@@ -33,7 +33,7 @@ class ExamplesController < ApplicationController
   private
 
   def example_params
-    params.permit(:name, :content)
+    params.require(:example).permit(:name, :content)
   end
 
   def set_example
