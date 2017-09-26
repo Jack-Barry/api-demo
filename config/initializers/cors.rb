@@ -1,6 +1,6 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
  allow do
-   origins ENV['UI_URL']
+   origins ENV['UI_ROOT_URL']
 
    resource '*',
      headers: :any,
