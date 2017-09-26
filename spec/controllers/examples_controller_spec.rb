@@ -90,7 +90,8 @@ RSpec.describe 'Examples API', type: :request do
       end
 
       context "when the request is invalid" do
-        let(:invalid_attrs) { { name: 123 } }
+        let(:invalid_attrs) { { name: nil } }
+        before { put "/examples/#{example_id}", params: invalid_attrs }
 
         it "returns a validation failure message" do
           expect(response.body).to include("Name can't be blank")
