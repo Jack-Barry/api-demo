@@ -21,7 +21,7 @@ class ExamplesController < ApplicationController
   # PUT /examples/:id
   def update
     @example.update!(example_params)
-    head :no_content
+    json_response(@example)
   end
 
   # DELETE /examples/:id

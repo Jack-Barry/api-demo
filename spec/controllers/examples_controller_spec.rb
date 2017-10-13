@@ -84,8 +84,13 @@ RSpec.describe 'Examples API', type: :request do
           expect(Example.find(example_id).name).to eq("New Name")
         end
 
-        it "returns status code 204" do
-          expect(response).to have_http_status(204)
+        it "returns status code 200" do
+          expect(response).to have_http_status(200)
+        end
+
+        it "returns the updated example" do
+          expect(json['name']).to eq("New Name")
+          expect(json['content']).to eq(Example.find(example_id).content)
         end
       end
 
