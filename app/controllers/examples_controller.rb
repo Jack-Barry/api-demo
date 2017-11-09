@@ -1,6 +1,20 @@
 class ExamplesController < ApplicationController
   before_action :set_example, only: [:show, :update, :destroy]
 
+  # POST /examples
+  def create
+    @example = Example.create(example_params)
+    if @example.save
+      json_response(@example, :created)
+    else
+      @payload = {
+        example: @example,
+        errors:  @example.errors
+      }
+      json_response(@payload, :unprocessable_entity)
+    end
+  end
+
   # GET /examples
   def index
     @examples = Example.all
@@ -12,10 +26,18 @@ class ExamplesController < ApplicationController
     json_response(@example)
   end
 
-  # POST /examples
-  def create
-    @example = Example.create!(example_params)
-    json_response(@example, :created)
+  # GET /examples/validations
+  def validations
+    @validators = Example.validators.each_with_object([]) do |v, arr|
+      hashed_validator = {
+        "validator_type":  v.class.name.demodulize.chomp('Validator'), 
+        "options":         v.options,
+        "affected_fields": v.attributes
+      }
+      arr << hashed_validator
+    end
+
+    json_response(@validators)
   end
 
   # PUT /examples/:id

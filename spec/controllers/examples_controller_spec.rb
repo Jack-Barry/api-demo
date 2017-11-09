@@ -1,42 +1,79 @@
 require 'rails_helper'
 
 RSpec.describe 'Examples API', type: :request do
-  let!(:examples)  { create_list(:example, 10) }
+  let!(:examples)   { create_list(:example, 10) }
   let(:example_id) { examples.first.id }
 
+  # Create
+  describe "POST /examples" do
+    let(:valid_attrs) { { example: { name: "Valid Name", content: "Valid Content" } } }
+
+    context "when the request is valid" do
+      before { post "/examples", params: valid_attrs }
+
+      it "returns status code 201" do
+        expect(response).to have_http_status(201)
+      end
+
+      it "creates an example" do
+        expect(Example.where(name: "Valid Name", content: "Valid Content")).to exist
+      end
+    end
+
+    context "when the request is invalid" do
+      before { post "/examples", params: { example: { name: "Invalid Example" } } }
+
+      it "returns status code 422" do
+        expect(response).to have_http_status(422)
+      end
+
+      it "does not add an Example to the database" do
+        expect(Example.where(name: "Invalid Example")).not_to exist
+      end
+
+      it "returns the submitted Example object" do
+        expect(json['example']).to include("name" => "Invalid Example", "content" => nil )
+      end
+
+      it "returns a hash of errors" do
+        expect(json['errors']).to include("content" => [ "can't be blank" ])
+      end
+    end
+  end
+
+  # Read - Multiple
   describe "GET /examples" do
     before { get '/examples' }
-
-    it "returns examples" do
-      expect(json).not_to be_empty
-      expect(json.size).to eq(10)
-    end
 
     it "returns status code 200" do
       expect(response).to have_http_status(200)
     end
+
+    it "returns the requested examples" do
+      relevant_params = ["id", "name", "content"]
+      actual          = necessary_info(json, relevant_params)
+      expected        = necessary_info(examples, relevant_params, true)
+
+      expect(actual).to eq(expected)
+    end
   end
 
+  # Read - Singular
   describe "GET /examples/:id" do
     before { get "/examples/#{example_id}" }
 
     context "when the record exists" do
-      it "returns the example" do
-        expect(json).not_to be_empty
-        expect(json['id']).to eq(example_id)
-      end
-
       it "returns status code 200" do
         expect(response).to have_http_status(200)
+      end
+
+      it "returns the example" do
+        expect(json['id']).to eq(example_id)
       end
     end
 
     context "when the record does not exist" do
       let(:example_id) { 100 }
-
-      it "returns a 'not found' message" do
-        expect(response.body).to include("Couldn't find Example")
-      end
 
       it "returns status code 404" do
         expect(response).to have_http_status(404)
@@ -44,35 +81,21 @@ RSpec.describe 'Examples API', type: :request do
     end
   end
 
-  describe "POST /examples" do
-    let(:valid_attrs) { { example: { name: "Valid Name", content: "Valid Content" } } }
+  # Read - Validations
+  describe "GET /examples/validations" do
+    before { get "/examples/validations" }
 
-    context "when the request is valid" do
-      before { post "/examples", params: valid_attrs }
-
-      it "creates an example" do
-        expect(json['name']).to eq("Valid Name")
-        expect(json['content']).to eq("Valid Content")
-      end
-
-      it "returns status code 201" do
-        expect(response).to have_http_status(201)
-      end
+    it "returns status code 200" do
+      expect(response).to have_http_status(200)
     end
 
-    context "when the request is invalid" do
-      before { post "/examples", params: { example: { name: "Invalid Example" } } }
-
-      it "returns a validation failure message" do
-        expect(response.body).to include("Content can't be blank")
-      end
-
-      it "returns status code 422" do
-        expect(response).to have_http_status(422)
-      end
+    it "returns a list of validations Example objects" do
+      expect(json[0]["validator_type"]).to eq("Presence")
+      expect(json[0]["affected_fields"]).to eq(["name", "content"])
     end
   end
 
+  # Update
   describe "PUT /examples/:id" do
     let(:valid_attrs) { { example: { name: "New Name" } } }
 
@@ -117,6 +140,7 @@ RSpec.describe 'Examples API', type: :request do
     end
   end
 
+  # Destroy
   describe "DELETE /examples/:id" do
     context "when the record exists" do
       before { delete "/examples/#{example_id}" }
