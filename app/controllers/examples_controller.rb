@@ -30,7 +30,7 @@ class ExamplesController < ApplicationController
   def validations
     @validators = Example.validators.each_with_object([]) do |v, arr|
       hashed_validator = {
-        "validator_type":  v.class.name.demodulize.chomp('Validator'), 
+        "validator_type":  v.class.name.demodulize.chomp('Validator'),
         "options":         v.options,
         "affected_fields": v.attributes
       }
@@ -42,8 +42,15 @@ class ExamplesController < ApplicationController
 
   # PUT /examples/:id
   def update
-    @example.update!(example_params)
-    json_response(@example)
+    if @example.update(example_params)
+      json_response(@example)
+    else
+      @payload = {
+        example: @example,
+        errors:  @example.errors
+      }
+      json_response(@payload, :unprocessable_entity)
+    end
   end
 
   # DELETE /examples/:id

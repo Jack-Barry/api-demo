@@ -103,12 +103,12 @@ RSpec.describe 'Examples API', type: :request do
       context "when the request is valid" do
         before { put "/examples/#{example_id}", params: valid_attrs }
 
-        it "updates the example" do
-          expect(Example.find(example_id).name).to eq("New Name")
-        end
-
         it "returns status code 200" do
           expect(response).to have_http_status(200)
+        end
+
+        it "updates the example" do
+          expect(Example.find(example_id).name).to eq("New Name")
         end
 
         it "returns the updated example" do
@@ -121,12 +121,17 @@ RSpec.describe 'Examples API', type: :request do
         let(:invalid_attrs) { { example: { name: nil } } }
         before { put "/examples/#{example_id}", params: invalid_attrs }
 
-        it "returns a validation failure message" do
-          expect(response.body).to include("Name can't be blank")
-        end
-
         it "returns status code 422" do
           expect(response).to have_http_status(422)
+        end
+
+        it "does not update the example" do
+          expect(json['example']['id']).to eq(example_id)
+          expect(json['example']['name']).not_to eq("New Name")
+        end
+
+        it "returns a validation failure message" do
+          expect(json['errors']).to eq({ "name" => ["can't be blank"] })
         end
       end
     end
@@ -147,6 +152,11 @@ RSpec.describe 'Examples API', type: :request do
 
       it "returns status code 204" do
         expect(response).to have_http_status(204)
+      end
+
+      it "destroys the example" do
+        expect(Example.where(id: examples.last.id)).to exist
+        expect(Example.where(id: example_id)).not_to exist
       end
     end
 
