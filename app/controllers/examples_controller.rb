@@ -7,11 +7,7 @@ class ExamplesController < ApplicationController
     if @example.save
       json_response(@example, :created)
     else
-      @payload = {
-        example: @example,
-        errors:  @example.errors
-      }
-      json_response(@payload, :unprocessable_entity)
+      errors_response(@example)
     end
   end
 
@@ -45,11 +41,7 @@ class ExamplesController < ApplicationController
     if @example.update(example_params)
       json_response(@example)
     else
-      @payload = {
-        example: @example,
-        errors:  @example.errors
-      }
-      json_response(@payload, :unprocessable_entity)
+      errors_response(@example)
     end
   end
 
@@ -67,5 +59,13 @@ class ExamplesController < ApplicationController
 
   def set_example
     @example = Example.find(params[:id])
+  end
+
+  def errors_response(example)
+    @payload = {
+      example: example,
+      errors:  example.errors
+    }
+    json_response(@payload, :unprocessable_entity)
   end
 end
