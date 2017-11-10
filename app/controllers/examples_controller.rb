@@ -7,7 +7,7 @@ class ExamplesController < ApplicationController
     if @example.save
       json_response(@example, :created)
     else
-      errors_response(@example)
+      errors_for(@example)
     end
   end
 
@@ -41,7 +41,7 @@ class ExamplesController < ApplicationController
     if @example.update(example_params)
       json_response(@example)
     else
-      errors_response(@example)
+      errors_for(@example)
     end
   end
 
@@ -61,7 +61,7 @@ class ExamplesController < ApplicationController
     @example = Example.find(params[:id])
   end
 
-  def errors_response(example)
+  def errors_for(example)
     @payload = {
       example: example,
       errors:  example.errors
