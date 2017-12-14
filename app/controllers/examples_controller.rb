@@ -13,7 +13,7 @@ class ExamplesController < ApplicationController
 
   # GET /examples
   def index
-    @examples = Example.all
+    @examples = Example.all.sort_by(&:id).reverse
     json_response(@examples)
   end
 
