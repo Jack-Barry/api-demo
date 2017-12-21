@@ -49,10 +49,12 @@ RSpec.describe 'Examples API', type: :request do
       expect(response).to have_http_status(200)
     end
 
-    it "returns the requested examples" do
+    it "returns the requested examples in reverse chronological order" do
       relevant_params = ["id", "name", "content"]
+      sorted_examples = examples.sort_by {|e| e["created_at"]}.reverse
+
       actual          = necessary_info(json, relevant_params)
-      expected        = necessary_info(examples, relevant_params, true)
+      expected        = necessary_info(sorted_examples, relevant_params, true)
 
       expect(actual).to eq(expected)
     end
