@@ -6,9 +6,11 @@ class UsersController < ApplicationController
     user       = User.create!(user_params)
     auth_token = AuthenticateUser.new(user.username, user.password).call
     response   = {
-      message:    Message.account_created, 
+      message:    Message.account_created,
       auth_token: auth_token,
-      user:       user_params.except(:password) }
+      user:       user.attributes.except("password_digest", "auth_token")
+    }
+
     json_response(response, :created)
   end
 

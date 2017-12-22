@@ -25,8 +25,15 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it "returns the example object (except for password)" do
-        expect(json['user']['password']).to eq(nil)
-        expect(json['user']['username']).to eq(valid_attributes[:username])
+        new_user      = User.find_by(username: valid_attributes[:username])
+        new_user_json = json['user']
+
+        expect(new_user_json['password']).to eq(nil)
+        expect(new_user_json['password_digest']).to eq(nil)
+        expect(new_user_json['auth_token']).to eq(nil)
+        expect(new_user_json['id']).to eq(new_user.id)
+        expect(new_user_json['created_at']).not_to be_nil
+        expect(new_user_json['updated_at']).not_to be_nil
       end
     end
 
