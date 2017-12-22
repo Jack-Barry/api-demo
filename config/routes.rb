@@ -6,6 +6,6 @@ Rails.application.routes.draw do
   put    'examples/:id',         to: 'examples#update'
   delete 'examples/:id',         to: 'examples#destroy'
 
-  post    'auth/login',          to: 'authentication#authenticate'
   post    'signup',              to: 'users#create'
+  post    'auth/login',          to: 'authentication#authenticate'
 end

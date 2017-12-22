@@ -5,7 +5,7 @@ RSpec.describe 'Users API', type: :request do
   let(:headers) { valid_headers.except('Authorization') }
 
   let(:valid_attributes) do
-    attributes_for(:user, password_confirmation: user.password)
+    attributes_for(:user)
   end
 
   describe 'POST /signup' do
@@ -22,6 +22,11 @@ RSpec.describe 'Users API', type: :request do
 
       it 'returns an authentication token' do
         expect(json['auth_token']).not_to be_nil
+      end
+
+      it "returns the example object (except for password)" do
+        expect(json['user']['password']).to eq(nil)
+        expect(json['user']['username']).to eq(valid_attributes[:username])
       end
     end
 

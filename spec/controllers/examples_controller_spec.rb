@@ -21,6 +21,11 @@ RSpec.describe 'Examples API', type: :request do
         it "creates an example" do
           expect(Example.where(name: "Valid Name", content: "Valid Content")).to exist
         end
+
+        it "returns the example object" do
+          expect(json['name']).to eq("Valid Name")
+          expect(json['content']).to eq("Valid Content")
+        end
       end
 
       context "when the request is invalid" do
