@@ -44,9 +44,8 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(422)
       end
 
-      it 'returns failure message' do
-        expect(json['message'])
-          .to match(/Validation failed: Password can't be blank, Username can't be blank, Password digest can't be blank/)
+      it "returns a hash of errors" do
+        expect(json['errors']).to include("password" => [ "can't be blank" ])
       end
     end
   end
