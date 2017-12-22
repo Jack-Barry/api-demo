@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   get    'examples/:id',         to: 'examples#show'
   put    'examples/:id',         to: 'examples#update'
   delete 'examples/:id',         to: 'examples#destroy'
+
+  post    'auth/login',          to: 'authentication#authenticate'
 end
