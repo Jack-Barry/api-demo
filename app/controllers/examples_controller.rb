@@ -1,4 +1,5 @@
 class ExamplesController < ApplicationController
+  skip_before_action :authorize_request
   before_action :set_example, only: [:show, :update, :destroy]
 
   # POST /examples
