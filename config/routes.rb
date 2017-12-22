@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   delete 'examples/:id',         to: 'examples#destroy'
 
   post    'auth/login',          to: 'authentication#authenticate'
+  post    'signup',              to: 'users#create'
 end
