@@ -24,7 +24,8 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   # Add custom methods
-  config.include RequestSpecHelper, type: :request
+  config.include RequestSpecHelper
+  config.include ControllerSpecHelper
 
   # Setup for database_cleaner
   config.before(:suite) do
