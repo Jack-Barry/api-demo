@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
   skip_before_action :authorize_request, only: :create
 
+  def show 
+    @user = current_user
+    json_response({ user: @user })
+  end
+
   # POST /signup
   def create
     @user = User.create(user_params)

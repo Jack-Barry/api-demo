@@ -8,6 +8,27 @@ RSpec.describe 'Users API', type: :request do
     attributes_for(:user)
   end
 
+  describe 'GET /my-profile' do
+    let(:user)    { create(:user) }
+    let(:headers) { valid_headers }
+
+    context 'when user is authenticated' do
+      before { get '/my-profile' }
+
+      it 'responds with 422' do
+        expect(response).to have_http_status(422)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      before { get '/my-profile', params: {}, headers: headers }
+
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
   describe 'POST /signup' do
     context 'when valid request' do
       before { post '/signup', params: valid_attributes.to_json, headers: headers }

@@ -8,4 +8,5 @@ Rails.application.routes.draw do
 
   post    'signup',              to: 'users#create'
   post    'login',               to: 'authentication#authenticate'
+  get     'my-profile',          to: 'users#show'
 end
